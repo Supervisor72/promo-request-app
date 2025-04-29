@@ -1,12 +1,15 @@
 
 [
   {
-    "data": "2025-04-29",
     "puntoVendita": "Fano",
     "prodotto": "Lavatrice LG 9kg",
-    "prezzoOriginale": 499.99,
     "scontoRichiesto": 10,
-    "motivazione": "Fine stock",
-    "stato": "In attesa"
+    "motivazione": "Fine stock"
+  },
+  {
+    "puntoVendita": "Osimo",
+    "prodotto": "Frigorifero Samsung",
+    "scontoRichiesto": 15,
+    "motivazione": "Promozione fine stagione"
   }
 ]
