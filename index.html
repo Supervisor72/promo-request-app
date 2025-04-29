@@ -8,7 +8,35 @@
   <script>
     function aggiornaMailto(form) {
       const puntoVendita = form.elements["Punto Vendita"].value;
-      const mailto = `mailto:d.pavoni@dml-italia.com?subject=Richiesta sconto da ${puntoVendita}`;
+      let emailDestinatario = "";
+
+      switch(puntoVendita) {
+        case "Fano":
+          emailDestinatario = "trony.fano@dml-italia.com";
+          break;
+        case "Monsano":
+          emailDestinatario = "trony.monsano@dml-italia.com";
+          break;
+        case "Osimo":
+          emailDestinatario = "trony.osimo@dml-italia.com";
+          break;
+        case "Macerata":
+          emailDestinatario = "trony.macerata@dml-italia.com";
+          break;
+        case "Civitanova":
+          emailDestinatario = "trony.civitanova@dml-italia.com";
+          break;
+        case "Pesaro":
+          emailDestinatario = "trony.pesaro@dml-italia.com";
+          break;
+        case "Trony":
+          emailDestinatario = "trony.monsano@dml-italia.com";
+          break;
+        default:
+          emailDestinatario = "d.pavoni@dml-italia.com"; // Default di sicurezza
+      }
+
+      const mailto = `mailto:${emailDestinatario}?subject=Richiesta sconto da ${puntoVendita}`;
       form.action = mailto;
     }
   </script>
@@ -25,12 +53,12 @@
         <option value="Macerata">Macerata</option>
         <option value="Civitanova">Civitanova</option>
         <option value="Pesaro">Pesaro</option>
+        <option value="Trony">Trony</option>
       </select>
     </label><br><br>
     <label>Prodotto:<br><input type="text" name="Prodotto" required></label><br>
     <label>Sconto Richiesto (%):<br><input type="number" name="Sconto Richiesto" required></label><br>
     <label>Motivazione:<br><textarea name="Motivazione" required></textarea></label><br>
-    <label>Email Mittente:<br><input type="email" name="Email Mittente" required></label><br>
     <input type="submit" value="Invia Richiesta">
   </form>
 </body>
