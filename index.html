@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Richiesta Sconto</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Richiesta Autorizzazione Sconto</h1>
+  <form id="discountForm" action="https://formsubmit.co/la-tua-mail@azienda.it" method="POST">
+    <label>Punto Vendita:</label>
+    <select name="Punto Vendita" required>
+      <option>Fano</option>
+      <option>Monsano</option>
+      <option>Osimo</option>
+      <option>Macerata</option>
+      <option>Civitanova</option>
+      <option>Pesaro</option>
+    </select><br>
+
+    <label>Prodotto:</label>
+    <input type="text" name="Prodotto" required><br>
+
+    <label>Prezzo Originale:</label>
+    <input type="number" name="Prezzo Originale" required><br>
+
+    <label>Sconto Richiesto (%):</label>
+    <input type="number" name="Sconto Richiesto" required><br>
+
+    <label>Motivazione:</label>
+    <textarea name="Motivazione" required></textarea><br>
+
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_autoresponse" value="La tua richiesta è stata inviata con successo.">
+
+    <button type="submit">📩 Invia richiesta</button>
+  </form>
+</body>
+</html>

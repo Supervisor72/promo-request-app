@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Amministratore</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Dashboard - Richieste di Sconto</h1>
+  <div id="counter"></div>
+  <table id="requestTable" border="1">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Punto Vendita</th>
+        <th>Prodotto</th>
+        <th>Prezzo</th>
+        <th>Sconto (%)</th>
+        <th>Motivazione</th>
+        <th>Stato</th>
+        <th>Azione</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    let counter = 12;
+
+    fetch('richieste.json')
+      .then(response => response.json())
+      .then(data => {
+        const tableBody = document.querySelector('#requestTable tbody');
+        const counterDiv = document.getElementById('counter');
+
+        const approvati = data.filter(r => r.stato === "Approvato").length;
+        counter -= approvati;
+        counterDiv.innerHTML = `<p><strong>Autorizzazioni residue:</strong> ${counter}</p>`;
+
+        data.forEach((r, index) => {
+          const row = document.createElement('tr');
+
+          row.innerHTML = `
+            <td>${r.data}</td>
+            <td>${r.puntoVendita}</td>
+            <td>${r.prodotto}</td>
+            <td>€${r.prezzoOriginale.toFixed(2)}</td>
+            <td>${r.scontoRichiesto}%</td>
+            <td>${r.motivazione}</td>
+            <td>${r.stato}</td>
+            <td>
+              ${r.stato === "In attesa" ? `<button onclick="approva(${index})">Approva</button>` : ''}
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      });
+
+    function approva(index) {
+      alert("Questa funzione richiederebbe il salvataggio nel file JSON, che GitHub Pages non supporta direttamente. Puoi modificare manualmente 'richieste.json'.");
+    }
+  </script>
+</body>
+</html>
