@@ -7,36 +7,9 @@
   <link rel="stylesheet" href="style.css">
   <script>
     function aggiornaMailto(form) {
+      const emailMittente = form.elements["Email Mittente"].value;
       const puntoVendita = form.elements["Punto Vendita"].value;
-      let emailDestinatario = "";
-
-      switch(puntoVendita) {
-        case "Fano":
-          emailDestinatario = "trony.fano@dml-italia.com";
-          break;
-        case "Monsano":
-          emailDestinatario = "trony.monsano@dml-italia.com";
-          break;
-        case "Osimo":
-          emailDestinatario = "trony.osimo@dml-italia.com";
-          break;
-        case "Macerata":
-          emailDestinatario = "trony.macerata@dml-italia.com";
-          break;
-        case "Civitanova":
-          emailDestinatario = "trony.civitanova@dml-italia.com";
-          break;
-        case "Pesaro":
-          emailDestinatario = "trony.pesaro@dml-italia.com";
-          break;
-        case "Trony":
-          emailDestinatario = "trony.monsano@dml-italia.com";
-          break;
-        default:
-          emailDestinatario = "d.pavoni@dml-italia.com"; // Default di sicurezza
-      }
-
-      const mailto = `mailto:${emailDestinatario}?subject=Richiesta sconto da ${puntoVendita}`;
+      const mailto = `mailto:d.pavoni@dml-italia.com?subject=Richiesta sconto da ${puntoVendita}&body=Email mittente: ${emailMittente}%0AProdotto: ${form.elements["Prodotto"].value}%0ASconto Richiesto: ${form.elements["Sconto Richiesto"].value}%0AMotivazione: ${form.elements["Motivazione"].value}`;
       form.action = mailto;
     }
   </script>
@@ -56,6 +29,7 @@
         <option value="Trony">Trony</option>
       </select>
     </label><br><br>
+    <label>Email Mittente:<br><input type="email" name="Email Mittente" required></label><br>
     <label>Prodotto:<br><input type="text" name="Prodotto" required></label><br>
     <label>Sconto Richiesto (%):<br><input type="number" name="Sconto Richiesto" required></label><br>
     <label>Motivazione:<br><textarea name="Motivazione" required></textarea></label><br>
