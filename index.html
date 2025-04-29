@@ -5,11 +5,28 @@
   <meta charset="UTF-8">
   <title>Richiesta Sconto</title>
   <link rel="stylesheet" href="style.css">
+  <script>
+    function aggiornaMailto(form) {
+      const puntoVendita = form.elements["Punto Vendita"].value;
+      const mailto = `mailto:d.pavoni@dml-italia.com?subject=Richiesta sconto da ${puntoVendita}`;
+      form.action = mailto;
+    }
+  </script>
 </head>
 <body>
   <h1>Modulo Richiesta Sconto</h1>
-  <form action="mailto:d.pavoni@dml-italia.com" method="post" enctype="text/plain">
-    <label>Punto Vendita:<br><input type="text" name="Punto Vendita" required></label><br>
+  <form method="post" enctype="text/plain" onsubmit="aggiornaMailto(this)">
+    <label>Punto Vendita:<br>
+      <select name="Punto Vendita" required>
+        <option value="">-- Seleziona un punto vendita --</option>
+        <option value="Fano">Fano</option>
+        <option value="Monsano">Monsano</option>
+        <option value="Osimo">Osimo</option>
+        <option value="Macerata">Macerata</option>
+        <option value="Civitanova">Civitanova</option>
+        <option value="Pesaro">Pesaro</option>
+      </select>
+    </label><br><br>
     <label>Prodotto:<br><input type="text" name="Prodotto" required></label><br>
     <label>Sconto Richiesto (%):<br><input type="number" name="Sconto Richiesto" required></label><br>
     <label>Motivazione:<br><textarea name="Motivazione" required></textarea></label><br>
