@@ -58,6 +58,12 @@
       margin-bottom: 10px;
       display: none;
     }
+    .attendi {
+      color: red;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
   </style>
   <script>
     function aggiornaMailto(form) {
@@ -114,20 +120,17 @@
       } else if (prodotto === "BIANCO") {
         scontoInput.max = "10";
         document.getElementById("scontoMax").textContent = "(max 10%)";
-      } else {
-        document.getElementById("scontoMax").textContent = "";
       }
     }
 
-    function mostraConferma() {
-      document.getElementById('conferma').style.display = 'block';
+    function mostraAttendi() {
+      document.getElementById("attendi").style.display = "block";
     }
   </script>
 </head>
 <body>
   <h1>Modulo Richiesta Sconto</h1>
-  <form method="post" enctype="text/plain" 
-    onsubmit="if (verificaSconto()) { aggiornaMailto(this); mostraConferma(); return true; } else { return false; }">
+  <form method="post" enctype="text/plain" onsubmit="return verificaSconto() && aggiornaMailto(this)">
     <label>Punto Vendita:</label>
     <select name="Punto Vendita" required>
       <option value="">-- Seleziona un punto vendita --</option>
@@ -166,11 +169,11 @@
     <input type="number" id="sconto" name="Sconto Richiesto" min="1" required>
     <div id="errorSconto" class="error"></div>
 
-    <input type="submit" value="Invia Richiesta">
+    <input type="submit" value="Invia Richiesta" onclick="mostraAttendi()">
   </form>
-  
-  <p id="conferma" style="display: none; color: red; font-weight: bold; text-align: center; margin-top: 20px;">
+
+  <div id="attendi" class="attendi" style="display: none;">
     ATTENDI CONFERMA VIA MAIL
-  </p>
+  </div>
 </body>
 </html>
