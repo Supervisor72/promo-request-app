@@ -77,7 +77,8 @@
         `Data Vendita: ${dataVendita}%0A` +
         `Prezzo Partenza: €${prezzoPartenza}%0A` +
         `Prezzo Scontato: €${prezzoScontato}%0A` +
-        `Sconto Richiesto: ${scontoRichiesto}%25%0A%0AApprovata: `;
+        `Sconto Richiesto: ${scontoRichiesto}%25%0A%0A` +
+        `AUTORIZZI SCONTO? (Rispondere con "SI" o "NO")`;
 
       const mailto = `mailto:d.pavoni@dml-italia.com?subject=Richiesta sconto da ${puntoVendita}&body=${body}`;
       form.action = mailto;
@@ -112,6 +113,8 @@
       } else if (prodotto === "BIANCO") {
         scontoInput.max = "10";
         document.getElementById("scontoMax").textContent = "(max 10%)";
+      } else {
+        document.getElementById("scontoMax").textContent = "";
       }
     }
   </script>
