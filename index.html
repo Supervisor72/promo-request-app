@@ -1,38 +1,145 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
   <title>Richiesta Sconto</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    form {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+    select, input[type="text"], input[type="number"], textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    select {
+      height: 45px;
+      font-size: 16px;
+    }
+    textarea {
+      height: 100px;
+      resize: vertical;
+    }
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+    }
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      display: none;
+    }
+  </style>
   <script>
     function aggiornaMailto(form) {
-      const emailMittente = form.elements["Email Mittente"].value;
       const puntoVendita = form.elements["Punto Vendita"].value;
-      const mailto = `mailto:d.pavoni@dml-italia.com?subject=Richiesta sconto da ${puntoVendita}&body=Email mittente: ${emailMittente}%0AProdotto: ${form.elements["Prodotto"].value}%0ASconto Richiesto: ${form.elements["Sconto Richiesto"].value}%0AMotivazione: ${form.elements["Motivazione"].value}`;
+      const prodotto = form.elements["Prodotto"].value;
+      const codiceProdotto = form.elements["Codice Prodotto"].value;
+      const scontoRichiesto = form.elements["Sconto Richiesto"].value;
+      const motivazione = form.elements["Motivazione"].value;
+      
+      const mailto = `mailto:d.pavoni@dml-italia.com?subject=Richiesta sconto da ${puntoVendita}&body=Punto Vendita: ${puntoVendita}%0AProdotto: ${prodotto}%0ACodice Prodotto: ${codiceProdotto}%0ASconto Richiesto: ${scontoRichiesto}%25%0AMotivazione: ${motivazione}%0A%0AApprovata: `;
+      
       form.action = mailto;
+    }
+    
+    function verificaSconto() {
+      const prodotto = document.getElementById("prodotto").value;
+      const sconto = document.getElementById("sconto").value;
+      const errorMsg = document.getElementById("errorSconto");
+      
+      if (prodotto === "TV" && sconto > 5) {
+        errorMsg.style.display = "block";
+        errorMsg.textContent = "Per la categoria TV lo sconto massimo è del 5%";
+        return false;
+      } else if (prodotto === "BIANCO" && sconto > 10) {
+        errorMsg.style.display = "block";
+        errorMsg.textContent = "Per la categoria BIANCO lo sconto massimo è del 10%";
+        return false;
+      } else {
+        errorMsg.style.display = "none";
+        return true;
+      }
+    }
+    
+    function aggiornaScontoMassimo() {
+      const prodotto = document.getElementById("prodotto").value;
+      const scontoInput = document.getElementById("sconto");
+      
+      if (prodotto === "TV") {
+        scontoInput.max = "5";
+        document.getElementById("scontoMax").textContent = "(max 5%)";
+      } else if (prodotto === "BIANCO") {
+        scontoInput.max = "10";
+        document.getElementById("scontoMax").textContent = "(max 10%)";
+      }
     }
   </script>
 </head>
 <body>
   <h1>Modulo Richiesta Sconto</h1>
-  <form method="post" enctype="text/plain" onsubmit="aggiornaMailto(this)">
-    <label>Punto Vendita:<br>
-      <select name="Punto Vendita" required>
-        <option value="">-- Seleziona un punto vendita --</option>
-        <option value="Fano">Fano</option>
-        <option value="Monsano">Monsano</option>
-        <option value="Osimo">Osimo</option>
-        <option value="Macerata">Macerata</option>
-        <option value="Civitanova">Civitanova</option>
-        <option value="Pesaro">Pesaro</option>
-        <option value="Trony">Trony</option>
-      </select>
-    </label><br><br>
-    <label>Email Mittente:<br><input type="email" name="Email Mittente" required></label><br>
-    <label>Prodotto:<br><input type="text" name="Prodotto" required></label><br>
-    <label>Sconto Richiesto (%):<br><input type="number" name="Sconto Richiesto" required></label><br>
-    <label>Motivazione:<br><textarea name="Motivazione" required></textarea></label><br>
+  <form method="post" enctype="text/plain" onsubmit="return verificaSconto() && aggiornaMailto(this)">
+    <label>Punto Vendita:</label>
+    <select name="Punto Vendita" required>
+      <option value="">-- Seleziona un punto vendita --</option>
+      <option value="Fano">Fano</option>
+      <option value="Monsano">Monsano</option>
+      <option value="Osimo">Osimo</option>
+      <option value="Macerata">Macerata</option>
+      <option value="Civitanova">Civitanova</option>
+      <option value="Pesaro">Pesaro</option>
+      <option value="Trony">Trony</option>
+    </select>
+    
+    <label>Prodotto:</label>
+    <select id="prodotto" name="Prodotto" required onchange="aggiornaScontoMassimo()">
+      <option value="">-- Seleziona categoria prodotto --</option>
+      <option value="TV">TV</option>
+      <option value="BIANCO">BIANCO</option>
+    </select>
+    
+    <label>Codice Prodotto:</label>
+    <input type="text" name="Codice Prodotto" required>
+    
+    <label>Sconto Richiesto <span id="scontoMax"></span>:</label>
+    <input type="number" id="sconto" name="Sconto Richiesto" min="1" required>
+    <div id="errorSconto" class="error"></div>
+    
+    <label>Motivazione:</label>
+    <textarea name="Motivazione" required></textarea>
+    
     <input type="submit" value="Invia Richiesta">
   </form>
 </body>
