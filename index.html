@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -117,11 +118,16 @@
         document.getElementById("scontoMax").textContent = "";
       }
     }
+
+    function mostraConferma() {
+      document.getElementById('conferma').style.display = 'block';
+    }
   </script>
 </head>
 <body>
   <h1>Modulo Richiesta Sconto</h1>
-  <form method="post" enctype="text/plain" onsubmit="return verificaSconto() && aggiornaMailto(this)">
+  <form method="post" enctype="text/plain" 
+    onsubmit="if (verificaSconto()) { aggiornaMailto(this); mostraConferma(); return true; } else { return false; }">
     <label>Punto Vendita:</label>
     <select name="Punto Vendita" required>
       <option value="">-- Seleziona un punto vendita --</option>
@@ -162,5 +168,9 @@
 
     <input type="submit" value="Invia Richiesta">
   </form>
+  
+  <p id="conferma" style="display: none; color: red; font-weight: bold; text-align: center; margin-top: 20px;">
+    ATTENDI CONFERMA VIA MAIL
+  </p>
 </body>
 </html>
