@@ -74,26 +74,29 @@
     }
   </style>
   <script>
-    function aggiornaMailto(form) {
-      const pv = form["Punto Vendita"].value;
-      const prod = form["Prodotto"].value;
-      const codProd = form["Codice Prodotto"].value;
-      const cliente = form["Cognome Nome Cliente"].value;
-      const data = form["Data Vendita"].value;
-      const prezzoPart = form["Prezzo Partenza"].value;
-      const prezzoScont = form["Prezzo Scontato"].value;
-      const scontoRichiesto = form["Sconto Richiesto"].value;
+   function aggiornaMailto(form) {
+  const pv = form["Punto Vendita"].value;
+  const prod = form["Prodotto"].value;
+  const codProd = form["Codice Prodotto"].value;
+  const cliente = form["Cognome Nome Cliente"].value;
+  const data = form["Data Vendita"].value;
+  const prezzoPart = form["Prezzo Partenza"].value;
+  const prezzoScont = form["Prezzo Scontato"].value;
+  const scontoRichiesto = form["Sconto Richiesto"].value;
 
-      const body = 
-        `Punto Vendita: ${pv}\n` +
-        `Prodotto: ${prod}\n` +
-        `Codice Prodotto: ${codProd}\n` +
-        `Cliente: ${cliente}\n` +
-        `Data Vendita: ${data}\n` +
-        `Prezzo Partenza: €${prezzoPart}\n` +
-        `Prezzo Scontato: €${prezzoScont}\n` +
-        `Sconto Richiesto: ${scontoRichiesto}%\n\n` +
-        `Autorizzi Sconto: (Rispondere con "SI" o "NO")`;
+  // Corpo mail con CRLF espliciti
+  const CRLF = "%0D%0A";
+
+  const body = 
+    `Punto Vendita: ${pv}${CRLF}` +
+    `Prodotto: ${prod}${CRLF}` +
+    `Codice Prodotto: ${codProd}${CRLF}` +
+    `Cliente: ${cliente}${CRLF}` +
+    `Data Vendita: ${data}${CRLF}` +
+    `Prezzo Partenza: €${prezzoPart}${CRLF}` +
+    `Prezzo Scontato: €${prezzoScont}${CRLF}` +
+    `Sconto Richiesto: ${scontoRichiesto}%${CRLF}${CRLF}` +
+    `Autorizzi Sconto: (Rispondere con "SI" o "NO")`;
 
       const mailtoLink = `mailto:d.pavoni@dml-italia.com?subject=Richiesta sconto da ${encodeURIComponent(pv)}&body=${encodeURIComponent(body)}`;
       form.action = mailtoLink;
