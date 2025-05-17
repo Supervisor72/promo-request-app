@@ -2,219 +2,225 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <title>Richiesta Sconto</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Richiesta Sconto</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       max-width: 600px;
-      margin: 20px auto;
-      padding: 15px;
-      box-sizing: border-box;
-      background: #f5f5f5;
+      margin: 0 auto;
+      padding: 20px;
     }
     h1 {
       text-align: center;
       color: #333;
-      margin-bottom: 20px;
     }
     form {
-      background: #fff;
+      background-color: #f9f9f9;
       padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      box-sizing: border-box;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     label {
       font-weight: bold;
+      margin-bottom: 5px;
       display: block;
-      margin-top: 15px;
-      margin-bottom: 6px;
     }
-    select, input[type="text"], input[type="number"], input[type="date"] {
+    select, input[type="text"], input[type="number"], input[type="date"], textarea {
       width: 100%;
       padding: 10px;
-      font-size: 16px;
+      margin-bottom: 15px;
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
+      font-size: 16px;
     }
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 25px;
-      justify-content: center;
+    select {
+      height: 45px;
     }
-    button, input[type="submit"] {
-      background-color: #007bff;
-      border: none;
-      padding: 12px 25px;
-      border-radius: 5px;
+    input[type="submit"], button {
+      background-color: #4CAF50;
       color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
       cursor: pointer;
       font-size: 16px;
-      flex: 1 1 45%;
-      min-width: 140px;
-      transition: background-color 0.3s ease;
+      width: 100%;
+      margin-top: 10px;
     }
-    button:hover, input[type="submit"]:hover {
-      background-color: #0056b3;
+    input[type="submit"]:hover, button:hover {
+      background-color: #45a049;
     }
-    #errorSconto {
+    .error {
       color: red;
       font-size: 14px;
-      margin-top: 6px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      display: none;
+    }
+    .attendi {
+      color: red;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 10px;
       display: none;
     }
     @media (max-width: 480px) {
-      button, input[type="submit"] {
-        flex: 1 1 100%;
+      body {
+        padding: 10px;
+      }
+      select, input[type="text"], input[type="number"], input[type="date"], textarea, input[type="submit"], button {
+        font-size: 14px;
       }
     }
   </style>
   <script>
-   function aggiornaMailto(form) {
-  const pv = form["Punto Vendita"].value;
-  const prod = form["Prodotto"].value;
-  const codProd = form["Codice Prodotto"].value;
-  const cliente = form["Cognome Nome Cliente"].value;
-  const data = form["Data Vendita"].value;
-  const prezzoPart = form["Prezzo Partenza"].value;
-  const prezzoScont = form["Prezzo Scontato"].value;
-  const scontoRichiesto = form["Sconto Richiesto"].value;
+    function aggiornaMailto(form) {
+      const puntoVendita = encodeURIComponent(form.elements["Punto Vendita"].value);
+      const prodotto = encodeURIComponent(form.elements["Prodotto"].value);
+      const codiceProdotto = encodeURIComponent(form.elements["Codice Prodotto"].value);
+      const cliente = encodeURIComponent(form.elements["Cognome Nome Cliente"].value);
+      const dataVendita = encodeURIComponent(form.elements["Data Vendita"].value);
+      const prezzoPartenza = encodeURIComponent(form.elements["Prezzo Partenza"].value);
+      const prezzoScontato = encodeURIComponent(form.elements["Prezzo Scontato"].value);
+      const scontoRichiesto = encodeURIComponent(form.elements["Sconto Richiesto"].value);
 
-  // Corpo mail con CRLF espliciti
-  const CRLF = "%0D%0A";
-
-  const body = 
-    `Punto Vendita: ${pv}${CRLF}` +
-    `Prodotto: ${prod}${CRLF}` +
-    `Codice Prodotto: ${codProd}${CRLF}` +
-    `Cliente: ${cliente}${CRLF}` +
-    `Data Vendita: ${data}${CRLF}` +
-    `Prezzo Partenza: €${prezzoPart}${CRLF}` +
-    `Prezzo Scontato: €${prezzoScont}${CRLF}` +
-    `Sconto Richiesto: ${scontoRichiesto}%${CRLF}${CRLF}` +
-    `Autorizzi Sconto: (Rispondere con "SI" o "NO")`;
-
-      const mailtoLink = `mailto:d.pavoni@dml-italia.com?subject=Richiesta sconto da ${encodeURIComponent(pv)}&body=${encodeURIComponent(body)}`;
-      form.action = mailtoLink;
-    }
-
-    function verificaSconto() {
-      const prod = document.getElementById("prodotto").value;
-      const sconto = parseFloat(document.getElementById("sconto").value);
-      const errorEl = document.getElementById("errorSconto");
-
-      if (!prod || isNaN(sconto)) {
-        errorEl.style.display = "none";
-        return true;
-      }
-      
-      if (prod === "TV" && sconto > 5) {
-        errorEl.textContent = "Per il prodotto TV lo sconto massimo consentito è il 5%.";
-        errorEl.style.display = "block";
-        return false;
-      }
-      if (prod === "BIANCO" && sconto > 10) {
-        errorEl.textContent = "Per il prodotto BIANCO lo sconto massimo consentito è il 10%.";
-        errorEl.style.display = "block";
-        return false;
-      }
-
-      errorEl.style.display = "none";
-      return true;
-    }
-
-    function aggiornaScontoMassimo() {
-      const prod = document.getElementById("prodotto").value;
-      const scontoInput = document.getElementById("sconto");
-      if (prod === "TV") {
-        scontoInput.max = "5";
-      } else if (prod === "BIANCO") {
-        scontoInput.max = "10";
-      } else {
-        scontoInput.removeAttribute("max");
-      }
-    }
-
-    function preparaTelegram() {
-      const pv = document.querySelector('select[name="Punto Vendita"]').value;
-      const prod = document.querySelector('select[name="Prodotto"]').value;
-      const codProd = document.querySelector('input[name="Codice Prodotto"]').value;
-      const cliente = document.querySelector('input[name="Cognome Nome Cliente"]').value;
-      const data = document.querySelector('input[name="Data Vendita"]').value;
-      const prezzoPart = document.querySelector('input[name="Prezzo Partenza"]').value;
-      const prezzoScont = document.querySelector('input[name="Prezzo Scontato"]').value;
-      const scontoRichiesto = document.querySelector('input[name="Sconto Richiesto"]').value;
-
-      if (!pv || !prod || !codProd || !cliente || !data || !prezzoPart || !prezzoScont || !scontoRichiesto) {
-        alert("Compila tutti i campi prima di preparare il messaggio Telegram.");
-        return;
-      }
-
-      const message = 
-        `Punto Vendita: ${pv}\n` +
-        `Prodotto: ${prod}\n` +
-        `Codice Prodotto: ${codProd}\n` +
+      const body = 
+        `Punto Vendita: ${puntoVendita}\n` +
+        `Prodotto: ${prodotto}\n` +
+        `Codice Prodotto: ${codiceProdotto}\n` +
         `Cliente: ${cliente}\n` +
-        `Data Vendita: ${data}\n` +
-        `Prezzo Partenza: €${prezzoPart}\n` +
-        `Prezzo Scontato: €${prezzoScont}\n` +
+        `Data Vendita: ${dataVendita}\n` +
+        `Prezzo Partenza: €${prezzoPartenza}\n` +
+        `Prezzo Scontato: €${prezzoScontato}\n` +
         `Sconto Richiesto: ${scontoRichiesto}%\n\n` +
         `Autorizzi Sconto: (Rispondere con "SI" o "NO")`;
 
-      const telegramUrl = `https://t.me/share/url?url=&text=${encodeURIComponent(message)}`;
+      const mailto = `mailto:d.pavoni@dml-italia.com?subject=Richiesta sconto da ${puntoVendita}&body=${encodeURIComponent(body)}`;
+      form.action = mailto;
+    }
+
+    function verificaSconto() {
+      const prodotto = document.getElementById("prodotto").value;
+      const sconto = parseFloat(document.getElementById("sconto").value);
+      const errorMsg = document.getElementById("errorSconto");
+
+      if (prodotto === "TV" && sconto > 5) {
+        errorMsg.style.display = "block";
+        errorMsg.textContent = "Per la categoria TV lo sconto massimo è del 5%";
+        return false;
+      } else if (prodotto === "BIANCO" && sconto > 10) {
+        errorMsg.style.display = "block";
+        errorMsg.textContent = "Per la categoria BIANCO lo sconto massimo è del 10%";
+        return false;
+      } else {
+        errorMsg.style.display = "none";
+        return true;
+      }
+    }
+
+    function aggiornaScontoMassimo() {
+      const prodotto = document.getElementById("prodotto").value;
+      const scontoInput = document.getElementById("sconto");
+
+      if (prodotto === "TV") {
+        scontoInput.max = "5";
+        document.getElementById("scontoMax").textContent = "(max 5%)";
+      } else if (prodotto === "BIANCO") {
+        scontoInput.max = "10";
+        document.getElementById("scontoMax").textContent = "(max 10%)";
+      } else {
+        scontoInput.removeAttribute("max");
+        document.getElementById("scontoMax").textContent = "";
+      }
+    }
+
+    function mostraAttendi() {
+      document.getElementById("attendi").style.display = "block";
+    }
+
+    function inviaTelegram(event) {
+      event.preventDefault();
+
+      const pv = encodeURIComponent(document.getElementById("pv").value);
+      const prod = encodeURIComponent(document.getElementById("prodotto").value);
+      const codProd = encodeURIComponent(document.getElementById("codProd").value);
+      const cliente = encodeURIComponent(document.getElementById("cliente").value);
+      const data = encodeURIComponent(document.getElementById("dataVendita").value);
+      const prezzoPart = encodeURIComponent(document.getElementById("prezzoPartenza").value);
+      const prezzoScont = encodeURIComponent(document.getElementById("prezzoScontato").value);
+      const sconto = encodeURIComponent(document.getElementById("sconto").value);
+
+      const messaggio = 
+        `Punto Vendita: ${pv}%0A` +
+        `Prodotto: ${prod}%0A` +
+        `Codice Prodotto: ${codProd}%0A` +
+        `Cliente: ${cliente}%0A` +
+        `Data Vendita: ${data}%0A` +
+        `Prezzo Partenza: €${prezzoPart}%0A` +
+        `Prezzo Scontato: €${prezzoScont}%0A` +
+        `Sconto Richiesto: ${sconto}%0A%0A` +
+        `Autorizzi Sconto: (Rispondere con "SI" o "NO")`;
+
+      // Telegram con username @Ottimista72
+      const telegramUrl = `https://t.me/Ottimista72?text=${messaggio}`;
+
       window.open(telegramUrl, '_blank');
     }
   </script>
 </head>
 <body>
   <h1>Modulo Richiesta Sconto</h1>
-  <form method="post" onsubmit="if(verificaSconto()){aggiornaMailto(this);return true;} else return false;">
-    <label for="pv">Punto Vendita:</label>
-    <select id="pv" name="Punto Vendita" required>
-      <option value="">-- Seleziona punto vendita --</option>
+  <form method="post" enctype="text/plain" 
+        onsubmit="return verificaSconto() && aggiornaMailto(this);"
+        id="formRichiesta">
+    <label>Punto Vendita:</label>
+    <select name="Punto Vendita" id="pv" required>
+      <option value="">-- Seleziona un punto vendita --</option>
       <option value="Fano">Fano</option>
       <option value="Monsano">Monsano</option>
       <option value="Osimo">Osimo</option>
       <option value="Macerata">Macerata</option>
       <option value="Civitanova">Civitanova</option>
       <option value="Pesaro">Pesaro</option>
+      <option value="Trony">Trony</option>
     </select>
 
-    <label for="prodotto">Prodotto:</label>
+    <label>Prodotto:</label>
     <select id="prodotto" name="Prodotto" required onchange="aggiornaScontoMassimo()">
-      <option value="">-- Seleziona prodotto --</option>
+      <option value="">-- Seleziona categoria prodotto --</option>
       <option value="TV">TV</option>
       <option value="BIANCO">BIANCO</option>
     </select>
 
-    <label for="codice">Codice Prodotto:</label>
-    <input type="text" id="codice" name="Codice Prodotto" required />
+    <label>Codice Prodotto:</label>
+    <input type="text" name="Codice Prodotto" id="codProd" required>
 
-    <label for="cliente">Cognome Nome Cliente:</label>
-    <input type="text" id="cliente" name="Cognome Nome Cliente" required />
+    <label>Cognome Nome Cliente:</label>
+    <input type="text" name="Cognome Nome Cliente" id="cliente" required>
 
-    <label for="data">Data Vendita:</label>
-    <input type="date" id="data" name="Data Vendita" required />
+    <label>Data Vendita:</label>
+    <input type="date" name="Data Vendita" id="dataVendita" required>
 
-    <label for="prezzoPartenza">Prezzo Partenza (€):</label>
-    <input type="number" step="0.01" id="prezzoPartenza" name="Prezzo Partenza" required />
+    <label>Prezzo Partenza (€):</label>
+    <input type="number" name="Prezzo Partenza" id="prezzoPartenza" step="0.01" required>
 
-    <label for="prezzoScontato">Prezzo Scontato (€):</label>
-    <input type="number" step="0.01" id="prezzoScontato" name="Prezzo Scontato" required />
+    <label>Prezzo Scontato (€):</label>
+    <input type="number" name="Prezzo Scontato" id="prezzoScontato" step="0.01" required>
 
-    <label for="sconto">Sconto Richiesto (%): <span id="scontoMax"></span></label>
-    <input type="number" id="sconto" name="Sconto Richiesto" min="0" max="100" required oninput="verificaSconto()" />
+    <label>Sconto Richiesto <span id="scontoMax"></span>:</label>
+    <input type="number" id="sconto" name="Sconto Richiesto" min="1" required>
+    <div id="errorSconto" class="error"></div>
 
-    <div id="errorSconto"></div>
-
-    <div class="buttons">
-      <input type="submit" value="Invia Richiesta via Mail" />
-      <button type="button" onclick="preparaTelegram()">Prepara Messaggio Telegram</button>
-    </div>
+    <input type="submit" value="Invia Richiesta" onclick="mostraAttendi()">
   </form>
+
+  <button onclick="inviaTelegram(event)">Invia tramite Telegram</button>
+
+  <div id="attendi" class="attendi">
+    ATTENDI CONFERMA VIA MAIL
+  </div>
 </body>
 </html>
