@@ -75,25 +75,27 @@
       const prezzoScontato = form.elements["Prezzo Scontato"].value;
       const scontoRichiesto = form.elements["Sconto Richiesto"].value;
 
-      const body = 
-        `Punto Vendita: ${puntoVendita}%0A` +
-        `Prodotto: ${prodotto}%0A` +
-        `Codice Prodotto: ${codiceProdotto}%0A` +
-        `Cliente: ${cliente}%0A` +
-        `Data Vendita: ${dataVendita}%0A` +
-        `Prezzo Partenza: €${prezzoPartenza}%0A` +
-        `Prezzo Scontato: €${prezzoScontato}%0A` +
-        `Sconto Richiesto: ${scontoRichiesto}%25%0A%0A` +
-        `Autorizzi Sconto: (Rispondere con "SI" o "NO")%0A`;
+      const body = `
+Punto Vendita: ${puntoVendita}
+Prodotto: ${prodotto}
+Codice Prodotto: ${codiceProdotto}
+Cliente: ${cliente}
+Data Vendita: ${dataVendita}
+Prezzo Partenza: €${prezzoPartenza}
+Prezzo Scontato: €${prezzoScontato}
+Sconto Richiesto: ${scontoRichiesto}%
 
-      const mailto = `mailto:d.pavoni@dml-italia.com?subject=Richiesta sconto da ${puntoVendita}&body=${body}`;
+Autorizzi Sconto: (Rispondere con "SI" o "NO")`;
+
+      const subject = `Richiesta sconto da ${puntoVendita}`;
+      const mailto = `mailto:d.pavoni@dml-italia.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       form.action = mailto;
       return true;
     }
 
     function verificaSconto() {
       const prodotto = document.getElementById("prodotto").value;
-      const sconto = parseFloat(document.getElementById("sconto").value);
+      const sconto = document.getElementById("sconto").value;
       const errorMsg = document.getElementById("errorSconto");
 
       if (prodotto === "TV" && sconto > 5) {
@@ -133,7 +135,7 @@
 </head>
 <body>
   <h1>Modulo Richiesta Sconto</h1>
-  <form method="get" onsubmit="return verificaSconto() && aggiornaMailto(this)">
+  <form method="post" enctype="text/plain" onsubmit="return verificaSconto() && aggiornaMailto(this)">
     <label>Punto Vendita:</label>
     <select name="Punto Vendita" required>
       <option value="">-- Seleziona un punto vendita --</option>
